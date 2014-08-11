@@ -12,6 +12,7 @@
 import os.path
 import re
 from tornado.ioloop import IOLoop
+from tornado.template import Template
 from tornado.web import Application, HTTPError, RequestHandler, StaticFileHandler, url
 import utils
 
@@ -41,7 +42,7 @@ class Server:
                 raise HTTPError(400)
             if not self.urlpartten.match(url):
                 raise HTTPError(400)
-            self.write(self.urlprefix + self.db.createRecord(url))
+            self.render('./static/result.html', src = url, url = self.urlprefix + self.db.createRecord(url))
 
     class StaticHandler(StaticFileHandler):
         def initialize(self, path):
