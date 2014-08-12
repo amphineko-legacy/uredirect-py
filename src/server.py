@@ -13,11 +13,16 @@ import os.path
 import re
 from tornado.ioloop import IOLoop
 from tornado.template import Template
+#from tornado.util import raise_exc_info
 from tornado.web import Application, HTTPError, RequestHandler, StaticFileHandler, url
 import utils
 
 class Server:
-    class LookupHandler(RequestHandler):
+    class CustomRequestHandler(RequestHandler):
+        def write_error(self, status_code, **kwargs):
+            self.render('./static/error.html');
+
+    class LookupHandler(CustomRequestHandler):
         def initialize(self, db):
             self.db = db
         def get(self, id):
@@ -27,7 +32,7 @@ class Server:
             else:
                 raise HTTPError(404)
 
-    class DisplayHandler(RequestHandler):
+    class DisplayHandler(CustomRequestHandler):
         def initialize(self, db, prefix):
             self.db = db
             self.urlprefix = prefix
@@ -39,7 +44,7 @@ class Server:
             else:
                 raise HTTPError(404)
 
-    class CommitHandler(RequestHandler):
+    class CommitHandler(CustomRequestHandler):
         def initialize(self, db, prefix):
             self.db = db
             self.urlpartten = re.compile('^((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)$')
@@ -64,6 +69,9 @@ class Server:
         def get(self, path=None, include_body=True):
             # Ignore 'path'.
             super(Server.StaticHandler, self).get(self.filename, include_body)
+
+        def write_error(self, status_code, **kwargs):
+            self.render('./static/error.html');
 
     def __init__(self, config, db):
         self.app = self.createApplication(db, config['prefix'])
