@@ -30,7 +30,7 @@ class Server:
             if url:
                 self.redirect(url)
             else:
-                raise HTTPError(404)
+                self.render('./static/null.html')
 
     class DisplayHandler(CustomRequestHandler):
         def initialize(self, db, prefix):
@@ -42,7 +42,7 @@ class Server:
             if url:
                 self.render('./static/show.html', local = local, url = url)
             else:
-                raise HTTPError(404)
+                self.render('./static/null.html')
 
     class CommitHandler(CustomRequestHandler):
         def initialize(self, db, prefix):
