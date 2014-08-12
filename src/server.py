@@ -25,7 +25,19 @@ class Server:
             if url:
                 self.redirect(url)
             else:
-                raise HTTPError(500)
+                raise HTTPError(404)
+
+    class DisplayHandler(RequestHandler):
+        def initialize(self, db, prefix):
+            self.db = db
+            self.urlprefix = prefix
+        def get(self, id):
+            local = self.urlprefix + id
+            url = self.db.lookupId(id)
+            if url:
+                self.render('./static/show.html', local = local, url = url)
+            else:
+                raise HTTPError(404)
 
     class CommitHandler(RequestHandler):
         def initialize(self, db, prefix):
@@ -42,7 +54,7 @@ class Server:
                 raise HTTPError(400)
             if not self.urlpartten.match(url):
                 raise HTTPError(400)
-            self.render('./static/result.html', src = url, url = self.urlprefix + self.db.createRecord(url))
+            self.redirect(self.urlprefix + self.db.createRecord(url) + '/show')
 
     class StaticHandler(StaticFileHandler):
         def initialize(self, path):
@@ -60,7 +72,8 @@ class Server:
 
     def createApplication(self, db, prefix):
         return Application([
-            url(r"/", self.StaticHandler, {'path': './static/index.html'}),
-            url(r"/new", self.CommitHandler, dict(db = db, prefix = prefix)),
-            url(r"/([A-Z,a-z,0-9]{6})", self.LookupHandler, dict(db = db))
+            url(r"^/$", self.StaticHandler, {'path': './static/index.html'}),
+            url(r"^/new$", self.CommitHandler, dict(db = db, prefix = prefix)),
+            url(r"^/([A-Z,a-z,0-9]{6})$", self.LookupHandler, dict(db = db)),
+            url(r"^/([A-Z,a-z,0-9]{6})/show$", self.DisplayHandler, dict(db = db, prefix = prefix))
         ])
