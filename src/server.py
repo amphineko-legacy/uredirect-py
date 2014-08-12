@@ -56,15 +56,6 @@ class Server:
                 raise HTTPError(400)
             self.redirect(self.urlprefix + self.db.createRecord(url) + '/show')
 
-    class StaticHandler(StaticFileHandler):
-        def initialize(self, path):
-            self.dirname, self.filename = os.path.split(path)
-            super(Server.StaticHandler, self).initialize(self.dirname)
-
-        def get(self, path=None, include_body=True):
-            # Ignore 'path'.
-            super(Server.StaticHandler, self).get(self.filename, include_body)
-
     def __init__(self, config, db):
         self.app = self.createApplication(db, config['prefix'])
         self.app.listen(config['http_port'])
@@ -72,7 +63,7 @@ class Server:
 
     def createApplication(self, db, prefix):
         return Application([
-            url(r"^/$", self.StaticHandler, {'path': './static/index.html'}),
+            url(r"^/$", StaticFileHandler, {'path': './static/index.html'}),
             url(r"^/new$", self.CommitHandler, dict(db = db, prefix = prefix)),
             url(r"^/([A-Z,a-z,0-9]{6})$", self.LookupHandler, dict(db = db)),
             url(r"^/([A-Z,a-z,0-9]{6})/show$", self.DisplayHandler, dict(db = db, prefix = prefix))
