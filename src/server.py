@@ -75,5 +75,6 @@ class Server:
             url(r"^/$", self.StaticHandler, {'path': './static/index.html'}),
             url(r"^/new$", self.CommitHandler, dict(db = db, prefix = prefix)),
             url(r"^/([A-Z,a-z,0-9]{6})$", self.LookupHandler, dict(db = db)),
-            url(r"^/([A-Z,a-z,0-9]{6})/show$", self.DisplayHandler, dict(db = db, prefix = prefix))
+            url(r"^/([A-Z,a-z,0-9]{6})/show$", self.DisplayHandler, dict(db = db, prefix = prefix)),
+            url(r"^/(.*)", self.StaticHandler, {'path': './static/null.html'})
         ])

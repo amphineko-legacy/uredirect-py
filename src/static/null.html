@@ -8,7 +8,8 @@
             h1 { border-bottom: 1px solid #DFDFDF; color: #555; display: block; font-size: 32px; line-height: 36px; margin: 24px 0; padding: 0; }
             p { color: #555; display: block; font-size: 16px; line-height: 24px; margin: 24px 16px; padding: 0; }
             a { color: #55B; text-decoration: none; }
-            blockquote { border-left: 4px solid #DADADA; color: #525252; font-size: 1em; line-height: 1.8em; margin-left: 16px; padding: 16px; }
+            blockquote { border-left: 4px solid #DADADA; color: #525252; font-size: 1em; line-height: 2em; margin-left: 16px; padding: 16px; }
+            blockquote b { color: red; }
         </style>
     </head>
     <body>
@@ -16,9 +17,8 @@
             u.futa.moe 鏈接轉發服務
         </h1>
         <blockquote>
-            ln -s<br />
-            from &raquo; <a href="{{ escape(local) }}">{{ escape(local) }}</a><br />
-            to &raquo; <a href="{{ escape(url) }}">{{ escape(url) }}</a><br />
+            <b>ERROR</b>: 找不到您指定的頁面<br />
+            您現在可以: <a href="javascript:history.go(-1)">返回上一頁</a> / <a href="/">返回主頁</a>
         </blockquote>
         <p>
             BiscuitNetwork / Powered by <a href="http://futa.pw/">Naoki Rinmous</a>
