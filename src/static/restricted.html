@@ -8,10 +8,8 @@
             h1 { border-bottom: 1px solid #DFDFDF; color: #555; display: block; font-size: 32px; line-height: 36px; margin: 24px 0; padding: 0; }
             p { color: #555; display: block; font-size: 16px; line-height: 24px; margin: 24px 16px; padding: 0; }
             a { color: #55B; text-decoration: none; }
-            blockquote { border-left: 4px solid #DADADA; color: #525252; font-size: 1em; line-height: 1.8em; margin-left: 16px; padding: 16px; }
-            blockquote .red { color: red; }
-            blockquote .comment { color: #777; }
-            blockquote .comment:before { content: '#'; margin: 0 4px; }
+            blockquote { border-left: 4px solid #DADADA; color: #525252; font-size: 1em; line-height: 2em; margin-left: 16px; padding: 16px; }
+            blockquote b { color: red; }
         </style>
     </head>
     <body>
@@ -19,11 +17,9 @@
             u.futa.moe 鏈接轉發服務
         </h1>
         <blockquote>
-            ln -s<br />
-            to &raquo; <a href="{{ escape(url) }}">{{ escape(url) }}</a><br />
-            <br />
-            from &raquo; <a href="{{ escape(local) }}">{{ escape(local) }}</a> <span class="comment">正常向請使用本鏈接</span><br />
-            <span class="red">restricted</span> &raquo; <a href="{{ escape(rlocal) }}">{{ escape(rlocal) }}</a> <span class="comment">若包含R-18, 暴力等使人不適的內容請使用本鏈接</span>
+            <b>WARNING</b>: 您訪問的頁面可能包含R-18, 暴力等可能引起您不適或者不符合您所在地法律的內容, 請確認您可以訪問之後點擊下面的鏈接繼續<br />
+            restricted &raquo; <a href="{{ escape(url) }}">{{ escape(url) }}</a><br />
+            您可以: <a href="javascript:history.go(-1)">返回上一頁</a> / <a href="/">返回主頁</a> / <a href="javascript:window.close()">關閉本頁面</a>
         </blockquote>
         <p>
             BiscuitNetwork / Powered by <a href="http://futa.pw/">Naoki Rinmous</a>

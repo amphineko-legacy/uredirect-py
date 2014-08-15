@@ -18,12 +18,16 @@ import utils
 
 class Server:
     class LookupHandler(RequestHandler):
-        def initialize(self, db):
+        def initialize(self, db, restrict):
             self.db = db
+            self.restrict = restrict
         def get(self, id):
             url = self.db.lookupId(id)
             if url:
-                self.redirect(url)
+                if self.restrict:
+                    self.render('./static/restricted.html', url = url)
+                else:
+                    self.redirect(url)
             else:
                 self.render('./static/null.html')
 
@@ -33,9 +37,10 @@ class Server:
             self.urlprefix = prefix
         def get(self, id):
             local = self.urlprefix + id
+            rlocal = self.urlprefix + 'r/' + id
             url = self.db.lookupId(id)
             if url:
-                self.render('./static/show.html', local = local, url = url)
+                self.render('./static/show.html', local = local, url = url, rlocal = rlocal)
             else:
                 self.render('./static/null.html')
 
@@ -72,9 +77,19 @@ class Server:
 
     def createApplication(self, db, prefix):
         return Application([
+            # Front page
             url(r"^/$", self.StaticHandler, {'path': './static/index.html'}),
+
+            # Commit interface
             url(r"^/new$", self.CommitHandler, dict(db = db, prefix = prefix)),
-            url(r"^/([A-Z,a-z,0-9]{6})$", self.LookupHandler, dict(db = db)),
+
+            # Redirect & Display
+            url(r"^/([A-Z,a-z,0-9]{6})$", self.LookupHandler, dict(db = db, restrict = False)),
             url(r"^/([A-Z,a-z,0-9]{6})/show$", self.DisplayHandler, dict(db = db, prefix = prefix)),
+
+            # Restricted Redirect (R-18, etc.)
+            url(r"^/r/([A-Z,a-z,0-9]{6})$", self.LookupHandler, dict(db = db, restrict = True)),
+
+            # Reject with 404
             url(r"^/(.*)", self.StaticHandler, {'path': './static/null.html'})
         ])
